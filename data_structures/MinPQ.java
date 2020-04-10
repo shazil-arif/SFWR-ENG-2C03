@@ -33,24 +33,44 @@ public class MinPQ<T extends Comparable<T>>{
     
 
     /**
-     * @brief 
-     * @param
-     * @return
+     * @brief insert a key into the heap
+     * @param i the index to insert the key at
+     * @param key the key to insert at index i
      */
-    public void insert(T key){
+    public void insert(int i , T key){
         heap[n++] = key;
-        heapifyUp(key);
-
+        heapifyUp(n);
     }
 
     public T deleteMin(){
-        return;
+        if(!isEmpty()) throw new IndexOutOfBoundsException("Cannot delete on empty priority queue");
+        T min = heap[1];
+        n--; //decrement heap size
+        swap(1,n); //exchange first with last key
+        heapifyDown(1); //then sink down the root node
+        return min;
     }
 
     /**
      * @brief private helper method to help adjust location of keys in heap
+     * @param k the index of the key to sink down the heap
      */
     private void heapifyDown(int k){
+        //as long as child index is within bounds of heap
+        while(2*k <= n){
+            /**
+             * since there are two children we have to compare to each
+             * one child is at 2*k and the other is at 2*k + 1
+             
+             * compare left and right child
+             * if right child is greater then the index to swap is the one on 'right' of heap, which is 2*k + 1 so increment j since it current is at 2*k
+             */
+            int j = 2*k;
+            if(j <= n && !isLess(j,j+1)) j++;
+            if(!isLess(j,k)) break; //the heap ordering is satisfied, break the loop here
+            swap(k,j);
+            k = j;
+        }
 
     }
 
@@ -59,19 +79,26 @@ public class MinPQ<T extends Comparable<T>>{
      * @details parent is at index k/2
      */
     private void heapifyUp(int k){
-        while(k > 1 && isLess(k/2,k)) {
+        /**
+         * as long as parent node has a key greater than given key at index k keep moving up 
+         * parent is at index k/2 so iteratively keep halving the index k and compare to parent
+         */
+        while(k > 1 && !isLess(k/2,k)) {
             swap(k/2,k);
             k = k/2;
-
         }
-
     }
+    
 
+    /**
+     * @brief swap two values in the heap
+     * @param i
+     * @param j
+     */
     private void swap(int i, int j){
         T temp = heap[j];
         heap[j] = heap[i];
-        heap[i] = heap[j];
-
+        heap[i] = temp;
     }
 
     /**
