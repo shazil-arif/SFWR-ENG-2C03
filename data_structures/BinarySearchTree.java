@@ -16,7 +16,8 @@ public class BinarySearchTree{
     }
     /*@brief get the value associated with a key
     *@param the key to search*/
-    public get_value(int key){
+    public void get_value(int key){
+        
 
     }
 }
